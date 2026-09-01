@@ -1,2 +1,2 @@
 # ml-a2-hanseg
-2D Gaussian splatting tomographic reconstruction for tiny organs-at-risk CTs
+Segmentation of small organs-at-risk (cochleae and parotid glands) in head-and-neck CT, using the HaN-Seg dataset. UTS Machine Learning A2.
