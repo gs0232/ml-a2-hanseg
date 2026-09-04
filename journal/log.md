@@ -22,7 +22,16 @@ Important notes:
 **Broke:** none
 **Fixed by:** none
 **Still unsure:**
-- Cell 8: xs, ys, cy, and cx -> what do they mean?
-- Why is array shape so big?
-- How can I explain Cochlea size of 108 voxels in a visual way? Is it really that small?
+- Cell 8: xs, ys, cy, and cx ... what do they mean? --> ys = row in which Cochlea is True; xs = column in which Cochlea is true; cy/cx = mean value which is the centre of the cochlea in that slice
+- Why is array shape so big? --> depending on scanner
+- How can I explain Cochlea size of 108 voxels in a visual way? Is it really that small? --> Each voxel is 0.5576 × 0.5576 × 2.0 = 0.62 mm³, so the cochlea is 67 mm³ which is a cube about 4 mm on a side.
 - Examine picture again to find real shape of Cochlea
+
+## 2026-09-04
+**Did:** 
+- Code load_case() function
+**Broke:** 
+1. Bug in load_case() with "cases[0]" not being able to properly locate cases in case 2, 3, etc.
+**Fixed by:** 
+1. Changing "case[0]" to "case_dir" within the load_case() function
+**Still unsure:**
