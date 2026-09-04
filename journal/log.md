@@ -30,8 +30,28 @@ Important notes:
 ## 2026-09-04
 **Did:** 
 - Code load_case() function
+- Split file finding from file reading: find_one() and case_files() -> case_files() can be tested without having the 4.9 GB dataset locally
+- Add geometry check to load_case(): mask size and spacing must match the CT, otherwise ValueError
+- Code resample() and window() in data.py
+- Write 5 tests in tests/test_data.py, add empty conftest.py in repo root; all 5 pass with pytest -q
+- Restructure a2_main.ipynb: clone repo into Colab and import from src/data.py instead of repeating the code in the cells
+- Figure 2: soft-tissue window (40/400) vs bone window (400/1800) on the same slice
+
+Important notes:
+- Resampling to 1 mm isotropic: 1024x1024x202 -> 571x571x404 = 132 M voxels; at 0.5 mm it would be 1054 M voxels (8x) -> 0.5 mm only realistic on a small crop, not on the whole head
+- Cochlea at 1 mm = ca. 67 voxels, ca. 4 voxels across; at 0.5 mm ca. 537 voxels, 8 across -> resolution decision still open
+- Soft-tissue window: everything above 240 HU saturates to 1.0 -> all bone is flat white
+- Bone window: soft tissue squashed into 0.22-0.31 -> nearly one single grey
+- -> no single window shows parotid and cochlea, that is why the network gets 2 input channels
+
 **Broke:** 
 1. Bug in load_case() with "cases[0]" not being able to properly locate cases in case 2, 3, etc.
+2. pytest -q: ModuleNotFoundError: No module named 'src'
+3. Colab cell 1: ModuleNotFoundError: No module named 'imp' when running %load_ext autoreload
+
 **Fixed by:** 
 1. Changing "case[0]" to "case_dir" within the load_case() function
-**Still unsure:**
+2. Adding an empty conftest.py in the repo root -> pytest then puts the repo root on the import path, not only tests/
+3. Removing %load_ext autoreload -> Colab runs Python 3.13, "imp" was removed in Python 3.12, but Colab's IPython autoreload still imports it. Using importlib.reload(src.data) in the import cell instead
+
+**Still unsure:** none

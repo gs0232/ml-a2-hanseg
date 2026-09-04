@@ -15,6 +15,6 @@ My interest is surgical planning, so I rewrote the motivation.
 **Verified by:** running the code.
 
 ## 2026-09-04 - Claude, data.py and test_data.py
-**Got:** Code snippets to use for functions in data.py and test_data.py
+**Got:** Code snippets to use for functions in data.py and test_data.py; instructions on how to use colab + github
 **How I used it:** Inserted and typed in code snippets + changed what had to be changed (file names for example)
 **Verified by:** Researched what unknown code means and run the code
