@@ -13,3 +13,8 @@ My interest is surgical planning, so I rewrote the motivation.
 **Got:** Step-by-step guide on how to set up Google Colab and the Dataset
 **How I used it:** set up the folder framework and code scaffold myself using online ressources (PyTorch Quickstart and SimpleITK repo); asked Claude how to step-by-step get the configurations right for the Google Colab.
 **Verified by:** running the code.
+
+## 2026-09-04 - Claude, data.py and test_data.py
+**Got:** Code snippets to use for functions in data.py and test_data.py
+**How I used it:** Inserted and typed in code snippets + changed what had to be changed (file names for example)
+**Verified by:** Researched what unknown code means and run the code
