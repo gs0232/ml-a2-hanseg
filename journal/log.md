@@ -67,7 +67,7 @@ Important notes:
 - code data.py/preprocess_case
 - add tests/test_prep.py to test the previous coded functions
 - restructure a2_main.ipynb and add cache for easier future usage
-- run preprocessing with one case, then with 20 (N_CASES = 20)
+- Preprocess and cache 20 cases, back up to Drive (284 MB)
 
 Important Notes:
 - Resampling makes cubes out of the boxes (from scanner)
@@ -78,37 +78,24 @@ Important Notes:
     - Crop: 256 mm - smallest area that holds both Parotid and Cochlea
     - Channels: 2 - ch0 for soft tissue window and ch1 for bone window
     - Keep: 1 - means that one empty slice per full slice (slice with structure) is kept -> should only be in training set (has to be implemented)
-- Output from preprocessing 20 cases
-    - [ 1/20] case_01 cached already
-    - [ 2/20] case_02  img(408, 2, 256, 256)   15.5 MB    22s
-    - [ 3/20] case_03  img(388, 2, 256, 256)   12.8 MB    41s
-    - [ 4/20] case_04  img(368, 2, 256, 256)   10.6 MB    57s
-    - /content/ml-a2-hanseg/src/data.py:218: UserWarning: case_05: crop lost 18 of 55670 label voxels warnings.warn(f"{os.path.basename(case_dir)}: crop lost "
-    - [ 5/20] case_05  img(364, 2, 256, 256)   12.5 MB    71s
-    - [ 6/20] case_06  img(423, 2, 256, 256)   17.3 MB    97s
-    - [ 7/20] case_07  img(396, 2, 256, 256)   12.2 MB   110s
-    - [ 8/20] case_08  img(405, 2, 256, 256)   16.3 MB   121s
-    - [ 9/20] case_09  img(348, 2, 256, 256)   12.9 MB   135s
-    - [10/20] case_10  img(429, 2, 256, 256)   14.2 MB   154s
-    - [11/20] case_11  img(408, 2, 256, 256)   11.5 MB   171s
-    - /content/ml-a2-hanseg/src/data.py:218: UserWarning: case_12: crop lost 234 of 51741 label voxel warnings.warn(f"{os.path.basename(case_dir)}: crop lost "
-    - [12/20] case_12  img(414, 2, 256, 256)   14.4 MB   186s
-    - [13/20] case_13  img(420, 2, 256, 256)   14.1 MB   200s
-    - [14/20] case_14  img(372, 2, 256, 256)   12.1 MB   215s
-    - [15/20] case_15  img(603, 2, 256, 256)   31.4 MB   232s
-    - [16/20] case_16  img(396, 2, 256, 256)   12.7 MB   248s
-    - [17/20] case_17  img(366, 2, 256, 256)   12.8 MB   261s
-    - /content/ml-a2-hanseg/src/data.py:218: UserWarning: case_18: crop lost 2433 of 96438 label voxels warnings.warn(f"{os.path.basename(case_dir)}: crop lost "
-    - [18/20] case_18  img(408, 2, 256, 256)   14.9 MB   279s
-    - [19/20] case_19  img(450, 2, 256, 256)   19.2 MB   290s
-    - /content/ml-a2-hanseg/src/data.py:218: UserWarning: case_20: crop lost 381 of 55947 label voxels warnings.warn(f"{os.path.basename(case_dir)}: crop lost "
-    - [20/20] case_20  img(402, 2, 256, 256)   15.8 MB   306s
+- Output from preprocessing available in expriments/preprocessing_1.csv
+- Wrong interpolator: Cochlea_L 66 voxels with is_mask=True vs 38 with is_mask=False -> linear interpolation destroys 42% of the cochlea
+- Class balance over 20 cases: cochlea 0.00089%, parotid 0.191%, background 99.808%
+- Median parotid is 256x the median cochlea
+- Cochlea 56 to 270 voxels between patients (4.8x) -> expect high variance in per-case Dice
+- Slices per case 348 to 603
 
 **Broke:** 
-- Keep 1 should only be in training set, has to be changed in preprocess_case
-**Fixed by:** none
+1. preprocess_case returned 2 values with keep_all=True and 3 without -> caching cell could not unpack it
+2. git add: fatal: Unable to create .git/index.lock: File exists
+3. UserWarning on 4 of 20 cases: crop lost label voxels (case_05 0.03%, case_12 0.45%, case_18 2.52%, case_20 0.68%)
+**Fixed by:** 
+1. Always return 3 values; with keep_all=True, keep = np.arange(len(lab_c))
+2. rm -f .git/index.lock (leftover lock, no git process running)
+3. Open -> need to check which structure the crop clips before deciding whether to re-cache
+
 **Still unsure:** 
 - what is the "out" in crop_to --> gives us information where the image was cropped and where it is missing rows/columns to fill them up with pads
 - what are the four binary mask classes? Why four? --> Cochlea R, Cochlea L, Parotid R, Parotid L
-- what is select_slices for? Why do we have to keep empty slices
+- what is select_slices for? Why do we have to keep empty slices --> because model would otherwise think that there is ALWAYS a structure in an image
 - why "del" commands in data.py/preprocess_case --> keeps memory down
