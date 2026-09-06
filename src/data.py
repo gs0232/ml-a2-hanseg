@@ -168,26 +168,37 @@ def preprocess_case(case_dir: str,
                     spacing=(1.0, 1.0, 1.0),
                     crop: int = CROP,
                     negatives_per_positive: int = 1,
-                    seed: int = 0) -> tuple:
+                    seed: int = 0,
+                    keep_all: bool = False) -> tuple:
     """One case, from disk to arrays the network can eat.
 
-    Returns (img, lab, keep):
+    Always returns three things, whatever keep_all is set to:
       img   uint8 (n, 2, crop, crop)  ch 0 soft-tissue window, ch 1 bone window
       lab   uint8 (n, crop, crop)     0 background, 1..4 in TARGET_FILES order
       keep  int   (n,)                which resampled slice each row came from
 
+    keep_all=False  every slice holding a structure, plus an equal number of
+                    empty ones. For the training patients: it stops the model
+                    spending nearly all its compute on background.
+    keep_all=True   every slice, so keep is simply 0..Z-1. For the validation
+                    and test patients, so they are scored on the slice mix the
+                    model would really meet rather than a flattering one.
+
     Hyperparameters chosen here, all of which the report has to justify:
-    1 mm isotropic spacing (so millimetre metrics mean the same in every
-    direction), a 256 mm crop (the smallest box holding both parotids and both
-    cochleae), the two window settings, and one empty slice kept per full one.
+    1 mm isotropic spacing (so a millimetre means the same in every direction
+    when distances are reported later), a 256 mm crop (the smallest box that
+    holds both parotids and both cochleae), the two window settings, and
+    negatives_per_positive.
     """
-    ct = resample(sitk.ReadImage(case_files(case_dir)["CT"]), spacing, is_mask=False)
+    paths = case_files(case_dir)               # one directory listing, not five
+
+    ct = resample(sitk.ReadImage(paths["CT"]), spacing, is_mask=False)
     hu = sitk.GetArrayFromImage(ct)            # (Z, Y, X) int16, Hounsfield units
     del ct
 
     masks = {}
     for name in TARGET_FILES:
-        m = resample(sitk.ReadImage(case_files(case_dir)[name]), spacing, is_mask=True)
+        m = resample(sitk.ReadImage(paths[name]), spacing, is_mask=True)
         masks[name] = sitk.GetArrayFromImage(m) > 0
         del m
     if any(a.shape != hu.shape for a in masks.values()):
@@ -212,5 +223,8 @@ def preprocess_case(case_dir: str,
     img = np.stack([soft, bone], axis=1)       # (Z, 2, crop, crop)
     del soft, bone, hu_c
 
-    keep = select_slices(lab_c, negatives_per_positive, seed)
+    if keep_all:
+        keep = np.arange(len(lab_c))
+    else:
+        keep = select_slices(lab_c, negatives_per_positive, seed)
     return img[keep], lab_c[keep], keep

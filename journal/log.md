@@ -75,12 +75,13 @@ Important Notes:
     - Spacing/Resolution: 1 mm - isotropic spacing (1 x 1 x 1 mm)
     - Crop: 256 mm - smallest area that holds both Parotid and Cochlea
     - Channels: 2 - ch0 for soft tissue window and ch1 for bone window
-    - Keep: 1 - means that one empty slice per full slice (slice with structure) is kept
+    - Keep: 1 - means that one empty slice per full slice (slice with structure) is kept -> should only be in training set (has to be implemented)
 
-**Broke:** none
+**Broke:** 
+- Keep 1 should only be in training set, has to be changed in preprocess_case
 **Fixed by:** none
 **Still unsure:** 
-- what is the "out" in crop_to
+- what is the "out" in crop_to --> gives us information where the image was cropped and where it is missing rows/columns to fill them up with pads
 - what are the four binary mask classes? Why four? --> Cochlea R, Cochlea L, Parotid R, Parotid L
 - what is select_slices for? Why do we have to keep empty slices
 - why "del" commands in data.py/preprocess_case --> keeps memory down

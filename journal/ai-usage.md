@@ -20,7 +20,7 @@ My interest is surgical planning, so I rewrote the motivation.
 **Verified by:** Researched what unknown code means and run the code
 
 ## 2026-09-06 - Claude, recap
-**Got:** Explanation of why resampling is happening and coding of preprocessing part; functions for preprocessing and testing them
+**Got:** Explanation of why resampling is happening and coding of preprocessing part; functions for preprocessing and testing them; Explanation about Cache
 **How I used it:** Read information about resampling; pasted in data.py and test_prep.py
 **Verified by:** Knowledge of previous classes about interpolation and then resampling made sense; letting the functions run through the test in colab
 **Helped with:**
@@ -28,3 +28,4 @@ My interest is surgical planning, so I rewrote the motivation.
     - Claude answered: 1mm because of 200mm Field of View and therefore 256-pixel crop, 26 mio. voxels
     - At 0.5mm the data would be 8 times higher
     - BUT: 1mm will score badly --> future work would imply 0.5mm but right now not possible
+- Restructuring a2_main.ipynb to have better and more logic structure
