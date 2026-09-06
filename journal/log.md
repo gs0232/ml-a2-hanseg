@@ -30,7 +30,7 @@ Important notes:
 ## 2026-09-04
 **Did:** 
 - Code load_case() function
-- Split file finding from file reading: find_one() and case_files() -> case_files() can be tested without having the 4.9 GB dataset locally
+- Split file-finding from file-reading: find_one() and case_files() -> case_files() can be tested without having the 4.9 GB dataset locally
 - Add geometry check to load_case(): mask size and spacing must match the CT, otherwise ValueError
 - Code resample() and window() in data.py
 - Write 5 tests in tests/test_data.py, add empty conftest.py in repo root; all 5 pass with pytest -q
@@ -54,4 +54,33 @@ Important notes:
 2. Adding an empty conftest.py in the repo root -> pytest then puts the repo root on the import path, not only tests/
 3. Removing %load_ext autoreload -> Colab runs Python 3.13, "imp" was removed in Python 3.12, but Colab's IPython autoreload still imports it. Using importlib.reload(src.data) in the import cell instead
 
-**Still unsure:** none
+**Still unsure:** 
+- resampling function: What is it used for?
+
+## 2026-09-06
+**Did:**
+- Recap of already existing function and diving deeper into resampling
+- code data.py/head_centre to find center of head in every image/slice
+- code data.py/crop_to to extract head out of every slice
+- code data.py/build_label to assign background (0) or one of the four binary masks classes (1-4) to a voxel (Coch R, Coch L, Paro R, Paro L)
+- code data.py/select_slices to keep track of the indices of slices that acutally hold one of the four structures + a few random empty ones
+- code data.py/preprocess_case
+- add tests/test_prep.py to test the previous coded functions
+
+Important Notes:
+- Resampling makes cubes out of the boxes (from scanner)
+- Interpolation decides if a voxel cube is then 0 or 1; shouldn't be a float because only classes can be assigned
+- Recap: One epoch works like this: run one batch forward -> compute loss -> compute gradients backwards -> optimizer decides step size for each weight
+- **HYPERPARAMETERS**
+    - Spacing/Resolution: 1 mm - isotropic spacing (1 x 1 x 1 mm)
+    - Crop: 256 mm - smallest area that holds both Parotid and Cochlea
+    - Channels: 2 - ch0 for soft tissue window and ch1 for bone window
+    - Keep: 1 - means that one empty slice per full slice (slice with structure) is kept
+
+**Broke:** none
+**Fixed by:** none
+**Still unsure:** 
+- what is the "out" in crop_to
+- what are the four binary mask classes? Why four? --> Cochlea R, Cochlea L, Parotid R, Parotid L
+- what is select_slices for? Why do we have to keep empty slices
+- why "del" commands in data.py/preprocess_case --> keeps memory down
