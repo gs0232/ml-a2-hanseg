@@ -1,0 +1,1 @@
+run_id,model,loss,lr,epochs,seed,split_seed,n_train,structure,dice,hd95_mm,hdmax_mm,sdice_1mm,sdice_2mm,gt_voxels,pred_voxels,missed,notes
