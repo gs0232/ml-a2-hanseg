@@ -1,0 +1,12 @@
+                            dice   hd95_mm  sdice_1mm
+baseline       structure                             
+all_background Cochlea_L  0.0000       NaN        NaN
+               Cochlea_R  0.0000       NaN        NaN
+               Parotid_L  0.0000       NaN        NaN
+               Parotid_R  0.0000       NaN        NaN
+bone_threshold Cochlea_L  0.0011  199.0599     0.0018
+               Cochlea_R  0.0000       NaN        NaN
+               Parotid_L  0.0000       NaN        NaN
+               Parotid_R  0.0000       NaN        NaN
+
+pixel accuracy of predicting background everywhere: 0.9976

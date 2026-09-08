@@ -1,0 +1,24 @@
+case_05
+   Parotid_L     29036 ->  29018   lost 18 (0.1%)
+case_12
+   Parotid_L     25815 ->  25581   lost 234 (0.9%)
+case_18
+   Parotid_L     49455 ->  47265   lost 2190 (4.4%)
+   Parotid_R     46845 ->  46602   lost 243 (0.5%)
+case_20
+   Parotid_R     25830 ->  25449   lost 381 (1.5%)
+case_21
+   Parotid_L     32254 ->  31948   lost 306 (0.9%)
+case_30
+   Parotid_L     44244 ->  43956   lost 288 (0.7%)
+case_32
+   Parotid_L     28564 ->  28230   lost 334 (1.2%)
+   Parotid_R     28878 ->  28752   lost 126 (0.4%)
+case_35
+   Parotid_L     44958 ->  44216   lost 742 (1.7%)
+case_37
+   Parotid_L     24834 ->  24798   lost 36 (0.1%)
+   Parotid_R     25888 ->  25886   lost 2 (0.0%)
+case_39
+   Parotid_L     51288 ->  51270   lost 18 (0.0%)
+   Parotid_R     55650 ->  53782   lost 1868 (3.4%)

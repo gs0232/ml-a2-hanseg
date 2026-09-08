@@ -133,6 +133,9 @@ Important Notes:
 - Mirror cases in loader for more data
 - Define Batch = 8 slices, Epochs = 30, Learning rate = 0.001
 - Add cases from HaN-Seg to have the following train, val, and test set (25, 8, 9)
+- Rerun a2_main with 42 cases
+- Update preprocessing_1.csv and add crop_losses.csv
+- Add baseline results from 9 test cases
 
 Important Notes:
 - model.py owns a function that has 7.8 million parameters that turns one slice into 5 numbers per pixel
@@ -141,6 +144,7 @@ Important Notes:
 - eps is a number put on top and bottom of Dice fraction to prevent division by zero
     - eps should stay at 1.0 because softmax never is exactly 0 (a structure that's absent from both the truth and the prediction still accumulates about 0.0000001 of "prediction mass" across 65,000 pixels.). If eps would fall below a threshold, the model would extremly punish a perfectly correct prediction
 - Optimizer: AdamW (steps cautiously where gradient is erratic)
+- Crop losses in cases 21, 30, 32, 35, 37, 39
 
 **Broke:** none
 **Fixed by:** none
