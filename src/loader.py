@@ -29,7 +29,19 @@ class SliceDataset(Dataset):
 
     def __init__(self, cache_dir: str, case_ids, select: bool = True,
                  negatives_per_positive: int = 1, seed: int = 0,
-                 augment: bool = False):
+                 augment: bool = False, rare_classes=(), rare_repeat: int = 1):
+        """rare_classes / rare_repeat oversample the slices that contain a rare
+        structure, by listing them in the index more than once.
+
+        Measured on the 25 training patients: only 8.5% of selected slices
+        contain a cochlea, and where one is present it is about 15 voxels out
+        of 524,288 in a batch. A gradient that faint, that rarely, is why the
+        first run never emitted a cochlea voxel at all. rare_repeat=6 lifts
+        those slices to about 36% of the mix.
+
+        With augment=True the repeats are not identical copies: each is flipped
+        independently, so this is closer to resampling than to duplication.
+        """
         self.augment = augment
         self.items, self.index, self.case_of = [], [], []
         for c, cid in enumerate(sorted(case_ids)):
@@ -38,8 +50,13 @@ class SliceDataset(Dataset):
             keep = (select_slices(lab, negatives_per_positive, seed)
                     if select else np.arange(len(lab)))
             self.items.append((img, lab))
-            self.index += [(c, int(s)) for s in keep]
-            self.case_of += [cid] * len(keep)
+            for s in keep:
+                reps = 1
+                if rare_repeat > 1 and rare_classes:
+                    if np.isin(lab[int(s)], list(rare_classes)).any():
+                        reps = rare_repeat
+                self.index += [(c, int(s))] * reps
+                self.case_of += [cid] * reps
 
     def __len__(self):
         return len(self.index)
@@ -54,6 +71,15 @@ class SliceDataset(Dataset):
             y = torch.as_tensor(FLIP_SWAP, dtype=torch.int64)[torch.flip(y, dims=[-1])]
         return x, y
 
+    def fraction_containing(self, classes) -> float:
+        """Fraction of the entries this dataset serves that hold any of these
+        classes. Use it to check what oversampling actually did."""
+        if not len(self.index):
+            return 0.0
+        hit = sum(1 for c, s in self.index
+                  if np.isin(self.items[c][1][s], list(classes)).any())
+        return hit / len(self.index)
+
     def class_counts(self) -> np.ndarray:
         """Voxels per class over everything this dataset will serve.
         Useful for sanity-checking the imbalance, and for class weights."""
@@ -65,11 +91,14 @@ class SliceDataset(Dataset):
 
 def make_loaders(cache_dir: str, split: dict, batch_size: int = 8,
                  negatives_per_positive: int = 1, seed: int = 0,
-                 augment: bool = True, num_workers: int = 2):
-    """(train_loader, val_loader). Validation keeps every slice deliberately."""
+                 augment: bool = True, num_workers: int = 2,
+                 rare_classes=(), rare_repeat: int = 1):
+    """(train_loader, val_loader). Validation keeps every slice deliberately,
+    and is never oversampled — only the training mix is changed."""
     train_ds = SliceDataset(cache_dir, split["train"], select=True,
                             negatives_per_positive=negatives_per_positive,
-                            seed=seed, augment=augment)
+                            seed=seed, augment=augment,
+                            rare_classes=rare_classes, rare_repeat=rare_repeat)
     val_ds = SliceDataset(cache_dir, split["val"], select=False)
     return (DataLoader(train_ds, batch_size=batch_size, shuffle=True,
                        num_workers=num_workers, drop_last=True),

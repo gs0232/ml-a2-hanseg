@@ -151,11 +151,23 @@ Important Notes:
 - loader and model:
     - 3538 training slices (selected)
     - 3078 validation slices (all of them)
-    - class counts in training: bg:230568530, ch_l:3500, ch_r:3732, p_l:646810, p_r:643796
+    - class counts in training:
+        - background   230,568,530   99.44026 %
+        - Cochlea_L          3,500    0.00151 %
+        - Cochlea_R          3,732    0.00161 %
+        - Parotid_L        646,810    0.27896 %
+        - Parotid_R        643,796    0.27766 %
+        - parotid : cochlea = 185 : 1
+
     - 7,762,885 parameters
     - shape check: (2, 5, 256, 256)
 - first training run: see experiments/train_run_1.csv
+    - Parotid_L 0.814, Parotid_R 0.823 against a baseline of 0.000
+    - Cochlea 0.000 on all 9 test patients, 18 complete misses of 36
 - first 3d metrics on 9 patients: see experiments/meetrics_2.csv
+    - Dice = 0.82 is strong
+    - sDice 1mm = 0.58 is ok
+    - big difference between HD95 and HDMAX
 
 Limitation found:
 - Outline for Cochlea in dataset grow bigger towards later cases (case 1-20 = median 101 voxels; case 21-42 = median 196 voxels). Therefore the split is uneven (train median 160.5, val median 136.5, test median 198.5). No re-splitting because should stay random. Parotid does not significantly change. Possible reaons for bigger Cochlea voxels might be change of protocols after case 20 or different scanner parameters (check at next unzip) that would cause higher resolution. "The ground truth is itself inconsistent, so Dice has a ceiling below 1 that has nothing to do with the model" - claude
@@ -170,8 +182,10 @@ Key points for Criterion C in report:
 - Dice is symmetric; surgical error costs are not
 - The ground truth is itself inconsistent, so Dice has a ceiling below 1 that has nothing to do with the model
 
-**Broke:** none
-**Fixed by:** none
+**Broke:**
+- Cochlea can't be found
+**Fixed by:**
+- Not sure yet, possibly with eps.
 
 **Still unsure:**
 - Why 7.8 MILLION parameters? --> see claude table exlpanation with 3x3 * 2 * 16 + ...
