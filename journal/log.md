@@ -104,31 +104,48 @@ Important Notes:
 **Did:**
 - Looked at the lost cases to identify the problem
 - Compared the dice and hd metrics
-- Split the datasets in training, test, and validation
-- Running the split and predicition of background and bone structure (experiments/split-pixel_accuracy.csv)
+- Split the datasets in training, test, and validation (12, 4, 4)
+- Running the split and predicition of background and bone structure on test dataset (experiments/split-pixel_accuracy.csv) to evaluate the metrics
 
 Important Notes:
 - There are 4 lost cases (5, 12, 18, 20) where some of the structure was cropped. It was always the Parotids, never the Cochlea that got cropped. Most of the cropping was below 1.5% except for case 18, where Parotid_L was lost with 4.4%. 
 - When looking at thin spurs, both dice and hd95 would miss it. hd_max would see it
-- Pixel accuracy = 0.99811
+- Pixel accuracy = 0.99811 -> PROOFS THAT ACCURACY IS A MEANINGLESS METRIC FOR THIS TASK AND THE LOSS FUNCTION HAS TO BE DESIGN AND NOT PICKED because 99.8% is background anyway
 - All rows are dice = 0.0, hd95_mm = NaN, sdice_1mm = NaN
     - Except: bone_threshold Cochlea_L  dice = 0.0003, hd95_mm = 228.2187, sdice_1mm = 0.001
+    - --> this is because the function has an attribute csl = 1, so it only looks for class 1, which is the left Cochlea; The numbers represent a weak result but they give a result. However, this is a demonstration of why intensity alone cannot work, not as a serious competitor and therefore the model has to be trained.
+    - Dice = Is it classified right (0/1)
+    - Surface Dice = How much of the outline looks like the real outline within tolerance (0-100% and a set tolerance) -> so sdice_1mm = 0.001 means that only 0.1% of the outline was matched within 1mm of tolerance
+    - hd95_mm = 228.2187 greatest distance from the actual right outline (hard to explain)
+- The baseline was set with this day
 
 **Broke:** none
 **Fixed by:** none
 
 **Still unsure:** 
 - what to do with the hd95 missing the thin spur
-- What does the row information mean, that differs from the other rows when predicting the pixel accuracy
+- What does the row information mean, that differs from the other rows when predicting the pixel accuracy --> see Important Notes
 
 ## 2026-09-08
 **Did:**
 - Recap of results from the day before
+- Setting goal for today: loss, optimizer, and hyperparameters
+- Mirror cases in loader for more data
+- Define Batch = 8 slices, Epochs = 30, Learning rate = 0.001
+- Add cases from HaN-Seg to have the following train, val, and test set (25, 8, 9)
 
 Important Notes:
-
+- model.py owns a function that has 7.8 million parameters that turns one slice into 5 numbers per pixel
+- losses.py computes the score of how the predicition matches the original which then can be differentiated and set a foundation on how the parameters should be adjusted
+- loader.py + train.py feeds batch by batch containing slices; runs the adjust-and-repeat loop
+- eps is a number put on top and bottom of Dice fraction to prevent division by zero
+    - eps should stay at 1.0 because softmax never is exactly 0 (a structure that's absent from both the truth and the prediction still accumulates about 0.0000001 of "prediction mass" across 65,000 pixels.). If eps would fall below a threshold, the model would extremly punish a perfectly correct prediction
+- Optimizer: AdamW (steps cautiously where gradient is erratic)
 
 **Broke:** none
 **Fixed by:** none
 
-**Still unsure:** none
+**Still unsure:**
+- Why 7.8 MILLION parameters?
+- one slice into 5 numbers per pixel? --> for background and the four structures; is then turned into probabilities of each class by softmax -> [0.9 0.02 0.04 0.0 0.4] = background
+- Can we not just download more cases instead of mirroring them?

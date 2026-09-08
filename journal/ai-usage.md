@@ -29,3 +29,15 @@ My interest is surgical planning, so I rewrote the motivation.
     - At 0.5mm the data would be 8 times higher
     - BUT: 1mm will score badly --> future work would imply 0.5mm but right now not possible
 - Restructuring a2_main.ipynb to have better and more logic structure
+
+## 2026-09-08 - Claude
+**Helped with:**
+- Understanding the results from the day before and how to interpret them --> if it really makes sense will proof itself after training the model
+- Understanding the goal for today's task
+- Code for loss, optimizer and hyperparameters
+
+**Got:**
+- Code for loss, model, loader, and train + potential problems
+
+**Verified by:**
+- Checking if the loader mirror images AND the label; Cheking docstring of loss for eps threshold
