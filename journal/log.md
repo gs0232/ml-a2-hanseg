@@ -136,6 +136,9 @@ Important Notes:
 - Rerun a2_main with 42 cases
 - Update preprocessing_1.csv and add crop_losses.csv
 - Add baseline results from 9 test cases
+- Build loader and model
+- Run first train run in a2_main
+- Evaluate metrics on 9 patients
 
 Important Notes:
 - model.py owns a function that has 7.8 million parameters that turns one slice into 5 numbers per pixel
@@ -145,11 +148,32 @@ Important Notes:
     - eps should stay at 1.0 because softmax never is exactly 0 (a structure that's absent from both the truth and the prediction still accumulates about 0.0000001 of "prediction mass" across 65,000 pixels.). If eps would fall below a threshold, the model would extremly punish a perfectly correct prediction
 - Optimizer: AdamW (steps cautiously where gradient is erratic)
 - Crop losses in cases 21, 30, 32, 35, 37, 39
+- loader and model:
+    - 3538 training slices (selected)
+    - 3078 validation slices (all of them)
+    - class counts in training: bg:230568530, ch_l:3500, ch_r:3732, p_l:646810, p_r:643796
+    - 7,762,885 parameters
+    - shape check: (2, 5, 256, 256)
+- first training run: see experiments/train_run_1.csv
+- first 3d metrics on 9 patients: see experiments/meetrics_2.csv
+
+Limitation found:
+- Outline for Cochlea in dataset grow bigger towards later cases (case 1-20 = median 101 voxels; case 21-42 = median 196 voxels). Therefore the split is uneven (train median 160.5, val median 136.5, test median 198.5). No re-splitting because should stay random. Parotid does not significantly change. Possible reaons for bigger Cochlea voxels might be change of protocols after case 20 or different scanner parameters (check at next unzip) that would cause higher resolution. "The ground truth is itself inconsistent, so Dice has a ceiling below 1 that has nothing to do with the model" - claude
+
+                      cases 01-20   cases 21-42   ratio   Mann-Whitney p
+cochlea (per side)            101           196    1.94         2.3e-08
+parotid (per side)         25,845        28,277    1.09         6.2e-02
+cochlea / parotid           4.51          6.19     1.37         1.1e-02
+
+Key points for Criterion C in report:
+- Dice counts overlap; surgery needs boundary distance in millimetres
+- Dice is symmetric; surgical error costs are not
+- The ground truth is itself inconsistent, so Dice has a ceiling below 1 that has nothing to do with the model
 
 **Broke:** none
 **Fixed by:** none
 
 **Still unsure:**
-- Why 7.8 MILLION parameters?
+- Why 7.8 MILLION parameters? --> see claude table exlpanation with 3x3 * 2 * 16 + ...
 - one slice into 5 numbers per pixel? --> for background and the four structures; is then turned into probabilities of each class by softmax -> [0.9 0.02 0.04 0.0 0.4] = background
-- Can we not just download more cases instead of mirroring them?
+- Can we not just download more cases instead of mirroring them? --> Yes, did that

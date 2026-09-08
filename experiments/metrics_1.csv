@@ -1,0 +1,8 @@
+            dice  hd95_mm  hdmax_mm  sdice_1mm  sdice_2mm
+structure                                                
+Cochlea_L  0.000      NaN       NaN        NaN        NaN
+Cochlea_R  0.000      NaN       NaN        NaN        NaN
+Parotid_L  0.814    8.298    46.182      0.576      0.752
+Parotid_R  0.823    5.093    34.076      0.586      0.773
+
+complete misses: 18 of 36
