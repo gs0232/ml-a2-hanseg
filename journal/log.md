@@ -99,3 +99,36 @@ Important Notes:
 - what are the four binary mask classes? Why four? --> Cochlea R, Cochlea L, Parotid R, Parotid L
 - what is select_slices for? Why do we have to keep empty slices --> because model would otherwise think that there is ALWAYS a structure in an image
 - why "del" commands in data.py/preprocess_case --> keeps memory down
+
+## 2026-09-07
+**Did:**
+- Looked at the lost cases to identify the problem
+- Compared the dice and hd metrics
+- Split the datasets in training, test, and validation
+- Running the split and predicition of background and bone structure (experiments/split-pixel_accuracy.csv)
+
+Important Notes:
+- There are 4 lost cases (5, 12, 18, 20) where some of the structure was cropped. It was always the Parotids, never the Cochlea that got cropped. Most of the cropping was below 1.5% except for case 18, where Parotid_L was lost with 4.4%. 
+- When looking at thin spurs, both dice and hd95 would miss it. hd_max would see it
+- Pixel accuracy = 0.99811
+- All rows are dice = 0.0, hd95_mm = NaN, sdice_1mm = NaN
+    - Except: bone_threshold Cochlea_L  dice = 0.0003, hd95_mm = 228.2187, sdice_1mm = 0.001
+
+**Broke:** none
+**Fixed by:** none
+
+**Still unsure:** 
+- what to do with the hd95 missing the thin spur
+- What does the row information mean, that differs from the other rows when predicting the pixel accuracy
+
+## 2026-09-08
+**Did:**
+- Recap of results from the day before
+
+Important Notes:
+
+
+**Broke:** none
+**Fixed by:** none
+
+**Still unsure:** none
