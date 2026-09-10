@@ -41,3 +41,13 @@ My interest is surgical planning, so I rewrote the motivation.
 
 **Verified by:**
 - Checking if the loader mirror images AND the label; Cheking docstring of loss for eps threshold
+
+## 2026-09-10
+**Helped with:**
+- Explaining why there was a drop in Dice Validation for the first training run --> because of Batch/group Normalisation --> explain furthr in knowledge gaps
+
+**Got:**
+- Code for plots
+
+**Verified by:**
+- Looking at them and then manually adjusting sizes etc.

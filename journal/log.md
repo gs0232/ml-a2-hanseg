@@ -195,7 +195,7 @@ Key points for Criterion C in report:
 
 ## 2026-09-10
 **Did:**
-- Plot training data from first train run
+- Plot training data from first train run + code plots for the loss functions and dice validation of the big run
 
 **Broke:** none
 **Fixed by:** none

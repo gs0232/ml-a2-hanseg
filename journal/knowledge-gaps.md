@@ -15,3 +15,6 @@ What kind of CNN/System am I implementing?
 
 ## 2026-09-09
 - Am I doing maxpooling or batch normalisation?
+
+## 2026-09-10
+- First training run plot shows a drop in 2nd epoch in Dice validation. Why? --> Problem of Batch/Group Normalisation because after 1 epoch averages are not right (VERIFY IF I SAID IT RIGHTT)
