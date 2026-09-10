@@ -48,6 +48,8 @@ My interest is surgical planning, so I rewrote the motivation.
 
 **Got:**
 - Code for plots
+- Code for training runs with different losses and the new training mix
 
 **Verified by:**
 - Looking at them and then manually adjusting sizes etc.
+- Complete summary of all parameters that influnce my model --> I still have to work my way through it

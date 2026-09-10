@@ -196,9 +196,21 @@ Key points for Criterion C in report:
 ## 2026-09-10
 **Did:**
 - Plot training data from first train run + code plots for the loss functions and dice validation of the big run
+- Renumbered a2_main
+- Start 5 more training runs. First four have different loss strategy
 
-**Broke:** none
-**Fixed by:** none
+Important Notes:
+- Training runs and what changed:
+    - 1 - Compound loss: done yesterday
+    - 2 - cross entropy loss: voxel-wise, imbalance blind
+    - 3 - dice loss: region-wise, imbalance-aware, unstable on tiny structure
+    - 4 - compound loss: standard combo
+    - 5 - tversky loss: matches my objective
+    - 6 - change training mix: 36% of slices contain a cochlea (before: 8.6%)
 
-**Still unsure:**
-- none
+**Broke:** 
+- plot design: center subheading wasn't working because x = 0.0
+**Fixed by:**
+- plot design: changed x = 0.5
+
+**Still unsure:** none

@@ -18,3 +18,4 @@ What kind of CNN/System am I implementing?
 
 ## 2026-09-10
 - First training run plot shows a drop in 2nd epoch in Dice validation. Why? --> Problem of Batch/Group Normalisation because after 1 epoch averages are not right (VERIFY IF I SAID IT RIGHTT)
+- How do we know that 36% of slices contain cochlea in the training run with the other training mix? So is it not randomized or is it just the numbers we know? --> First thought: we have a table with cases and their number of slices with cochlea and parotid. That's probably where the 36% come from. But where does the new training mix get made?
