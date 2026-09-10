@@ -62,7 +62,7 @@ def _titles(ax, main, sub):
     itself, but a 110-character title wraps badly at report width."""
     ax.set_title(main, loc="center", pad=30)
     if sub:
-        ax.text(0.0, 1.015, sub, transform=ax.transAxes, ha="center", va="center",
+        ax.text(0.5, 1.015, sub, transform=ax.transAxes, ha="center", va="bottom",
                 fontsize=12, color=INK_2)
 
 
