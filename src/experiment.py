@@ -153,3 +153,18 @@ RUNS = [
     dict(name="compound_over6", loss_name="compound",
          rare_classes=(1, 2), rare_repeat=6),
 ]
+
+# An optional sixth run, NOT part of the loss comparison.
+#
+# Run 4 collapsed: Parotid_L fell to exactly 0.000 at epoch 16 and never came
+# back. Same seed, so it will very likely do it again. That collapse is itself
+# a result — but "Tversky is unstable here" is a weaker claim than "Tversky is
+# unstable here and the learning rate is why", and this run is the difference
+# between the two. It changes TWO things against run 4's neighbours (the loss
+# and the learning rate), so it is an ablation reported on its own, never a
+# fifth column in the loss table.
+#
+# To use it:  for cfg in RUNS + ABLATIONS:
+ABLATIONS = [
+    dict(name="tversky_lr5e4", loss_name="tversky", lr=5e-4),
+]
