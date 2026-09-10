@@ -191,3 +191,14 @@ Key points for Criterion C in report:
 - Why 7.8 MILLION parameters? --> see claude table exlpanation with 3x3 * 2 * 16 + ...
 - one slice into 5 numbers per pixel? --> for background and the four structures; is then turned into probabilities of each class by softmax -> [0.9 0.02 0.04 0.0 0.4] = background
 - Can we not just download more cases instead of mirroring them? --> Yes, did that
+
+
+## 2026-09-10
+**Did:**
+- Plot training data from first train run
+
+**Broke:** none
+**Fixed by:** none
+
+**Still unsure:**
+- none
