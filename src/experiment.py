@@ -52,7 +52,8 @@ def run_one(name, cache_dir, split, device, weights_dir,
             csv_dir="experiments", fig_dir="figures",
             loss_name="compound", rare_classes=(), rare_repeat=1,
             epochs=30, lr=1e-3, batch_size=8, seed=0, augment=True,
-            run_index=None, n_runs=None, class_names=CLASS_NAMES):
+            run_index=None, n_runs=None, skip_if_done=True,
+            class_names=CLASS_NAMES):
     """Train one model, evaluate it in 3-D on the test patients, save everything.
 
     Returns (history_df, test_df).
@@ -64,6 +65,21 @@ def run_one(name, cache_dir, split, device, weights_dir,
     """
     for d in (csv_dir, fig_dir, weights_dir):
         os.makedirs(d, exist_ok=True)
+
+    hist_csv = f"{csv_dir}/history_{name}.csv"
+    test_csv = f"{csv_dir}/test_{name}.csv"
+
+    # Resume. A five-run loop that has to start from zero because run 4 died is
+    # four wasted hours, so a run that already finished is loaded, not repeated.
+    # Delete its two CSVs if you actually want it run again.
+    # test_csv is written last, so its existence is the marker that this run
+    # finished. history_csv may be missing (a run recovered from saved weights
+    # has no epoch log) — that costs you its training curve, not its result.
+    if skip_if_done and os.path.exists(test_csv):
+        print(f"[{name}] already finished — loading {test_csv}")
+        hist = pd.read_csv(hist_csv) if os.path.exists(hist_csv) else pd.DataFrame()
+        return hist, pd.read_csv(test_csv)
+
     torch.manual_seed(seed)
     np.random.seed(seed)
 
@@ -79,15 +95,23 @@ def run_one(name, cache_dir, split, device, weights_dir,
     print(f"{len(train_loader.dataset):5d} training slices" +
           (f"   ({frac:.1%} contain a cochlea)" if frac is not None else ""))
 
+    def checkpoint(history, best_state, improved):
+        # Written every epoch. The history CSV is a few kilobytes, so the cost
+        # is nothing; the weights are only rewritten when they actually got
+        # better. Both land wherever csv_dir and weights_dir point, which for
+        # a Colab run must be Drive and not the checkout.
+        pd.DataFrame(history).to_csv(hist_csv, index=False)
+        if improved:
+            torch.save(best_state, f"{weights_dir}/{name}.pt")
+
     model = UNet2D().to(device)
     history, best = fit(model, train_loader, val_loader, device,
                         loss_name=loss_name, epochs=epochs, lr=lr,
-                        class_names=class_names)
+                        class_names=class_names, on_epoch=checkpoint)
     model.load_state_dict(best)
     torch.save(best, f"{weights_dir}/{name}.pt")
 
     hist_df = pd.DataFrame(history)
-    hist_csv = f"{csv_dir}/history_{name}.csv"
     hist_df.to_csv(hist_csv, index=False)
 
     rows = []
@@ -97,7 +121,8 @@ def run_one(name, cache_dir, split, device, weights_dir,
             r.update(case=cid, run=name)
             rows.append(r)
     test_df = pd.DataFrame(rows)
-    test_df.to_csv(f"{csv_dir}/test_{name}.csv", index=False)
+    test_df.to_csv(test_csv, index=False)   # written last: its existence
+                                           # is what marks the run finished
 
     plot_loss(hist_csv, f"{fig_dir}/fig_{name}_loss.png",
               run_label=label, loss_name=loss_name)

@@ -42,12 +42,16 @@ def validate(model, loader, device, n_classes: int = 5):
 def fit(model, train_loader, val_loader, device, loss_name: str = "compound",
         epochs: int = 30, lr: float = 1e-3, weight_decay: float = 1e-4,
         class_names=("Cochlea_L", "Cochlea_R", "Parotid_L", "Parotid_R"),
-        log_every: int = 1, amp: bool = True):
+        log_every: int = 1, amp: bool = True, on_epoch=None):
     """Train, and return (history, best_state_dict).
 
     "Best" is the highest mean Dice over the four structures on the validation
     patients — not the lowest training loss, and not accuracy. Chosen on
     validation and never on test, so the test number stays honest.
+
+    on_epoch, if given, is called as on_epoch(history, best_state, improved)
+    after every epoch — used to checkpoint history and weights as the run
+    goes, so an interrupted run is still worth something.
 
     amp=True runs the forward pass in 16-bit where that is safe, which roughly
     halves the time on a T4. The GradScaler is not optional with it: 16-bit
@@ -83,10 +87,17 @@ def fit(model, train_loader, val_loader, device, loss_name: str = "compound",
                         "val_mean_dice": score,
                         **{f"val_dice_{c}": float(dice[i])
                            for i, c in enumerate(class_names, start=1)}})
-        if score > best_score:
+        improved = score > best_score
+        if improved:
             best_score = score
             best_state = {k: v.detach().cpu().clone()
                           for k, v in model.state_dict().items()}
+        # Hand the caller everything so far, every epoch. A run that dies at
+        # epoch 25 of 30 should still leave 25 epochs of history and its best
+        # weights on disk — losing all of it because the last epoch never
+        # arrived is not an acceptable failure mode.
+        if on_epoch is not None:
+            on_epoch(history, best_state, improved)
         if epoch % log_every == 0 or epoch == epochs - 1:
             print(f"epoch {epoch:3d}  loss {running/max(n,1):.4f}  " +
                   "  ".join(f"{c[:7]} {dice[i]:.3f}"
