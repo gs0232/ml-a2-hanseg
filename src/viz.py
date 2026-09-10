@@ -125,26 +125,6 @@ def plot_val_dice(csv_path, out_path=None, run_label=""):
     ax.set_ylim(-0.03, 1.05)
     _titles(ax, "Validation Dice per structure", run_label)
 
-    # Group labels at the right margin. The two lines within a pair sit about
-    # 0.01 apart — far too close to label individually — so the label names the
-    # organ and the line style separates the sides. Ink, not the series colour:
-    # the coloured line beside the word is the mark that carries identity.
-    x_end = df.epoch.iloc[-1]
-    coch_end = df[["val_dice_Cochlea_L", "val_dice_Cochlea_R"]].iloc[-1].mean()
-    par_end = df[["val_dice_Parotid_L", "val_dice_Parotid_R"]].iloc[-1].mean()
-    '''
-    for label, y in (("Parotid", par_end), ("Cochlea", coch_end)):
-        ax.annotate(label, xy=(x_end, y), xytext=(9, 0),
-                    textcoords="offset points", va="center",
-                    fontsize=12, color=INK, fontweight="600")
-    '''
-
-    coch = df[["val_dice_Cochlea_L", "val_dice_Cochlea_R"]]
-    if float(coch.to_numpy().max()) == 0.0:
-        ax.annotate(f"0.000 for all {len(df)} epochs", xy=(x_end * 0.30, 0.0),
-                    xytext=(0, 14), textcoords="offset points", ha="center",
-                    fontsize=12, color=INK_2)
-
     ax.legend(loc="center right", ncol=1, bbox_to_anchor=(1.0, 0.42))
     return _save(fig, out_path)
 
