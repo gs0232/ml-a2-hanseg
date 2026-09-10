@@ -210,7 +210,9 @@ Important Notes:
 
 **Broke:** 
 - plot design: center subheading wasn't working because x = 0.0
+- Runtime died during run 4/5 at epoch 25
 **Fixed by:**
 - plot design: changed x = 0.5
+- adapt code so csv gets safed earlier in the process + cell 27 as a recovery for the lost csv files
 
 **Still unsure:** none
