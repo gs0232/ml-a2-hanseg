@@ -62,7 +62,7 @@ def _titles(ax, main, sub):
     itself, but a 110-character title wraps badly at report width."""
     ax.set_title(main, loc="center", pad=30)
     if sub:
-        ax.text(0.0, 1.015, sub, transform=ax.transAxes, ha="center", va="bottom",
+        ax.text(0.0, 1.015, sub, transform=ax.transAxes, ha="center", va="center",
                 fontsize=12, color=INK_2)
 
 
@@ -132,10 +132,12 @@ def plot_val_dice(csv_path, out_path=None, run_label=""):
     x_end = df.epoch.iloc[-1]
     coch_end = df[["val_dice_Cochlea_L", "val_dice_Cochlea_R"]].iloc[-1].mean()
     par_end = df[["val_dice_Parotid_L", "val_dice_Parotid_R"]].iloc[-1].mean()
+    '''
     for label, y in (("Parotid", par_end), ("Cochlea", coch_end)):
         ax.annotate(label, xy=(x_end, y), xytext=(9, 0),
                     textcoords="offset points", va="center",
                     fontsize=12, color=INK, fontweight="600")
+    '''
 
     coch = df[["val_dice_Cochlea_L", "val_dice_Cochlea_R"]]
     if float(coch.to_numpy().max()) == 0.0:
