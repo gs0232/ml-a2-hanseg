@@ -257,8 +257,10 @@ ratio, cross-entropy / soft Dice, per class:
   Parotid_R        0.13x
 
 
-**Broke:** none
-**Fixed by:** none
+**Broke:**
+- Plot for validation mean dice: legend!
+**Fixed by:**
+- not yet fixed!
 
 **Still unsure:**
 - Norm Gradient
