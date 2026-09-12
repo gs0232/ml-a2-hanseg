@@ -110,13 +110,13 @@ Important Notes:
 Important Notes:
 - There are 4 lost cases (5, 12, 18, 20) where some of the structure was cropped. It was always the Parotids, never the Cochlea that got cropped. Most of the cropping was below 1.5% except for case 18, where Parotid_L was lost with 4.4%. 
 - When looking at thin spurs, both dice and hd95 would miss it. hd_max would see it
-- Pixel accuracy = 0.99811 -> PROOFS THAT ACCURACY IS A MEANINGLESS METRIC FOR THIS TASK AND THE LOSS FUNCTION HAS TO BE DESIGN AND NOT PICKED because 99.8% is background anyway
+- Pixel accuracy = 0.99811 -> PROVES THAT ACCURACY IS A MEANINGLESS METRIC FOR THIS TASK AND THE LOSS FUNCTION HAS TO BE DESIGN AND NOT PICKED because 99.8% is background anyway
 - All rows are dice = 0.0, hd95_mm = NaN, sdice_1mm = NaN
     - Except: bone_threshold Cochlea_L  dice = 0.0003, hd95_mm = 228.2187, sdice_1mm = 0.001
     - --> this is because the function has an attribute csl = 1, so it only looks for class 1, which is the left Cochlea; The numbers represent a weak result but they give a result. However, this is a demonstration of why intensity alone cannot work, not as a serious competitor and therefore the model has to be trained.
     - Dice = Is it classified right (0/1)
     - Surface Dice = How much of the outline looks like the real outline within tolerance (0-100% and a set tolerance) -> so sdice_1mm = 0.001 means that only 0.1% of the outline was matched within 1mm of tolerance
-    - hd95_mm = 228.2187 greatest distance from the actual right outline (hard to explain)
+    - hd95_mm = 228.2187 --> 95th percentile of boundary distances
 - The baseline was set with this day
 
 **Broke:** none
@@ -164,7 +164,7 @@ Important Notes:
 - first training run: see experiments/train_run_1.csv
     - Parotid_L 0.814, Parotid_R 0.823 against a baseline of 0.000
     - Cochlea 0.000 on all 9 test patients, 18 complete misses of 36
-- first 3d metrics on 9 patients: see experiments/meetrics_2.csv
+- first 3d metrics on 9 patients: see experiments/metrics_1.csv
     - Dice = 0.82 is strong
     - sDice 1mm = 0.58 is ok
     - big difference between HD95 and HDMAX
@@ -185,7 +185,7 @@ Key points for Criterion C in report:
 **Broke:**
 - Cochlea can't be found
 **Fixed by:**
-- Not sure yet, possibly with eps.
+- Not sure yet, possibly with eps. --> No, cross-entropy finds Cochlea (see 2026-09-10)
 
 **Still unsure:**
 - Why 7.8 MILLION parameters? --> see claude table exlpanation with 3x3 * 2 * 16 + ...
@@ -204,12 +204,12 @@ Key points for Criterion C in report:
 
 Important Notes:
 - Training runs and what changed:
-    - 1 - Compound loss: done yesterday
-    - 2 - cross entropy loss: voxel-wise, imbalance blind
-    - 3 - dice loss: region-wise, imbalance-aware, unstable on tiny structure
-    - 4 - compound loss: standard combo
-    - 5 - tversky loss: matches my objective
-    - 6 - change training mix: 36% of slices contain a cochlea (before: 8.6%)
+    - 0 - Compound loss: done yesterday
+    - 1 - **cross entropy loss: found Cochlea AND Parotid**
+    - 2 - dice loss: region-wise, imbalance-aware, unstable on tiny structure
+    - 3 - compound loss: standard combo
+    - 4 - tversky loss: matches my objective
+    - 5 - change training mix: 36% of slices contain a cochlea (before: 8.6%)
 - history csv files are reconstructed from printed notebook output log --> see comments in RECOVERED.md for citation in journal
 - Compound = ce + dice --> over 20 training batches, at the compound run's best weights
     - cross-entropy term  0.00686
@@ -226,4 +226,25 @@ Important Notes:
 2. adapt code so csv gets safed earlier in the process + cell 27 as a recovery for the lost csv files
 3. Used CPU for csv recovery
 
-**Still unsure:** none
+**Still unsure:**
+- Cell 28 and its purpose or how to interpret it. It is a test made by Claude but I don't know what the test is for
+
+## 2026-09-11
+**Did:**
+- No model work
+
+
+## 2026-09-12
+**Did:**
+- blub
+
+Important Notes:
+- blub
+
+**Broke:**
+1. blub
+**Fixed by:**
+1. blub
+
+**Still unsure:**
+- blub

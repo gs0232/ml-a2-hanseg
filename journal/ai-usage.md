@@ -59,3 +59,5 @@ My interest is surgical planning, so I rewrote the motivation.
 - Complete summary of all parameters that influnce my model --> I still have to work my way through it
 - recovery history csv files were built and will later be visualized in plots to verify
 - Looked at numbers of cell #28: EXPLANATION NEEDED
+
+**Important Note: Claude suggested cross-entropy (ce) to be imbalance-blind. However, this was proofed wrong by running the training runs with different losses (ce, dice, compund, tversky). Results show that ce finds Cochlea AND Parotid**

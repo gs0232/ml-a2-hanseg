@@ -14,8 +14,14 @@ What kind of CNN/System am I implementing?
     - Sigmoid would be an activation function for systems with only 2 classes (binary)
 
 ## 2026-09-09
-- Am I doing maxpooling or batch normalisation?
+- Am I doing maxpooling or batch normalisation? --> Both, MaxPool2d halves the resolution (image size) and BatchNorm2d rescales the activations so training stays stable (changes number ranges)
 
 ## 2026-09-10
-- First training run plot shows a drop in 2nd epoch in Dice validation. Why? --> Problem of Batch/Group Normalisation because after 1 epoch averages are not right (VERIFY IF I SAID IT RIGHTT)
-- How do we know that 36% of slices contain cochlea in the training run with the other training mix? So is it not randomized or is it just the numbers we know? --> First thought: we have a table with cases and their number of slices with cochlea and parotid. That's probably where the 36% come from. But where does the new training mix get made?
+- First training run plot shows a drop in 2nd epoch in Dice validation. Why
+    - Problem of Batch/Group Normalisation because during training BatchNorm normalises using the current batch's statistics; during validation the model is in eval() mode and uses running averages accumulated; After one epoch those averages haven't converged, so validation is computed with the wrong normalisation;
+- How do we know that 36% of slices contain cochlea in the training run with the other training mix? So is it not randomized or is it just the numbers we know?
+    - First thought: we have a table with cases and their number of slices with cochlea and parotid. That's probably where the 36% come from. But where does the new training mix get made?
+    - Answer: directly measured with train_loader.dataset.fraction_containing((1, 2)) then the new mix is made in SliceDataset.__init__ where slices containing a rare class get their index repeated 
+
+## 2026-09-12
+- Am I doing Batch or Group normalisation?
