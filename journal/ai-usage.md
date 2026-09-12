@@ -42,14 +42,20 @@ My interest is surgical planning, so I rewrote the motivation.
 **Verified by:**
 - Checking if the loader mirror images AND the label; Cheking docstring of loss for eps threshold
 
-## 2026-09-10
+## 2026-09-10 - Claude
 **Helped with:**
 - Explaining why there was a drop in Dice Validation for the first training run --> because of Batch/group Normalisation --> explain furthr in knowledge gaps
+- Recovery of csv
+- Explanation how to work around the problem of Google Colab T4
 
 **Got:**
 - Code for plots
 - Code for training runs with different losses and the new training mix
+- Code for recovery of history csv files
+- Code for compound loss (ce/dice) Ratio
 
 **Verified by:**
 - Looking at them and then manually adjusting sizes etc.
 - Complete summary of all parameters that influnce my model --> I still have to work my way through it
+- recovery history csv files were built and will later be visualized in plots to verify
+- Looked at numbers of cell #28: EXPLANATION NEEDED

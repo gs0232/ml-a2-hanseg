@@ -198,6 +198,9 @@ Key points for Criterion C in report:
 - Plot training data from first train run + code plots for the loss functions and dice validation of the big run
 - Renumbered a2_main
 - Start 5 more training runs. First four have different loss strategy
+- Recover lost csv files from cache
+- Build plots from notebook output log (the one's that have not been lost)
+- Run test of compound loss to find out ratio between cross-entropy and dice
 
 Important Notes:
 - Training runs and what changed:
@@ -207,12 +210,20 @@ Important Notes:
     - 4 - compound loss: standard combo
     - 5 - tversky loss: matches my objective
     - 6 - change training mix: 36% of slices contain a cochlea (before: 8.6%)
+- history csv files are reconstructed from printed notebook output log --> see comments in RECOVERED.md for citation in journal
+- Compound = ce + dice --> over 20 training batches, at the compound run's best weights
+    - cross-entropy term  0.00686
+    - soft Dice term      0.25366
+    - compound total      0.26052
+    - cross-entropy is 2.63% of the compound loss
 
 **Broke:** 
-- plot design: center subheading wasn't working because x = 0.0
-- Runtime died during run 4/5 at epoch 25
+1. plot design: center subheading wasn't working because x = 0.0
+2. Runtime died during run 4/5 at epoch 25
+3. I ran out of Google Colab T4 limit
 **Fixed by:**
-- plot design: changed x = 0.5
-- adapt code so csv gets safed earlier in the process + cell 27 as a recovery for the lost csv files
+1. plot design: changed x = 0.5
+2. adapt code so csv gets safed earlier in the process + cell 27 as a recovery for the lost csv files
+3. Used CPU for csv recovery
 
 **Still unsure:** none
