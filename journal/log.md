@@ -236,15 +236,29 @@ Important Notes:
 
 ## 2026-09-12
 **Did:**
-- blub
+- Answer some knowledge gaps
+- Rerun training run 4 and 5 after checking if files for 1-3 exist
 
 Important Notes:
-- blub
+- Cell 29 Output - Gradient Norms:
+gradient norm sent back into the logits, averaged over 5 batches
+(at the compound run's best weights — the state where cochlea = 0)
 
-**Broke:**
-1. blub
-**Fixed by:**
-1. blub
+term             background    Cochlea_L    Cochlea_R    Parotid_L    Parotid_R
+
+cross-entropy       0.00005      0.00000      0.00000      0.00003      0.00003
+soft Dice           0.00041      0.00000      0.00000      0.00032      0.00026
+
+ratio, cross-entropy / soft Dice, per class:
+  background       0.12x
+  Cochlea_L        2.07x
+  Cochlea_R       10.53x
+  Parotid_L        0.10x
+  Parotid_R        0.13x
+
+
+**Broke:** none
+**Fixed by:** none
 
 **Still unsure:**
-- blub
+- Norm Gradient

@@ -1,0 +1,11 @@
+run,batch,Cochlea_L,Cochlea_R,Parotid_L,Parotid_R
+ce,cases 01-20,0.562,0.675,0.767,0.787
+ce,cases 21-42,0.641,0.63,0.79,0.836
+compound,cases 01-20,0.0,0.0,0.809,0.786
+compound,cases 21-42,0.0,0.0,0.827,0.839
+compound_over6,cases 01-20,0.0,0.0,0.775,0.773
+compound_over6,cases 21-42,0.0,0.0,0.802,0.803
+dice,cases 01-20,0.0,0.0,0.784,0.806
+dice,cases 21-42,0.0,0.0,0.823,0.834
+tversky,cases 01-20,0.0,0.0,0.768,0.792
+tversky,cases 21-42,0.0,0.0,0.802,0.83
