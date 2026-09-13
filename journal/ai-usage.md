@@ -55,9 +55,19 @@ My interest is surgical planning, so I rewrote the motivation.
 - Code for compound loss (ce/dice) Ratio
 
 **Verified by:**
-- Looking at them and then manually adjusting sizes etc.
+- Looking at them and then manually adjusting sizes etc. + checking numbers with csv
 - Complete summary of all parameters that influnce my model --> I still have to work my way through it
 - recovery history csv files were built and will later be visualized in plots to verify
 - Looked at numbers of cell #28: EXPLANATION NEEDED
 
 **Important Note: Claude suggested cross-entropy (ce) to be imbalance-blind. However, this was proofed wrong by running the training runs with different losses (ce, dice, compund, tversky). Results show that ce finds Cochlea AND Parotid**
+
+## 2026-09-13
+**Helped with:**
+- experiments README.md for better overview of csv
+
+**Got:**
+- Plot for fig_dice_all_grid
+
+**Verified by:**
+- Looks like one figure with all the fig_dice_*** 

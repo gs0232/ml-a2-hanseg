@@ -244,6 +244,24 @@ Important Notes:
 gradient norm sent back into the logits, averaged over 5 batches
 (at the compound run's best weights — the state where cochlea = 0)
 
+- Cross-entropy:
+    - 0/18 misses
+    - best overall
+- Dice
+    - 9/18 misses of Cochlea
+    - Cochlea_R hd95_mm of 318mm with Dice 0.000(completely wrong place)
+- Compound
+    - 18/18 misses of Cochlea
+- Tversky
+    - 9/18 misses of Cochlea
+    - best Parotid_R hd_max with 12.2mm (but most have similar hd95_mm)
+    - lost Parotid_L completely after epoch 16
+    - least stable
+- Compound over6:
+    - 18/18 misses of Cochlea
+    - had 36% of slices containing Cochlae and still didn't find anything --> so it is not about class imbalance
+    - when cochlea class is nowhere to be found, the dice family gradient is almost flat
+
 term             background    Cochlea_L    Cochlea_R    Parotid_L    Parotid_R
 
 cross-entropy       0.00005      0.00000      0.00000      0.00003      0.00003
@@ -264,3 +282,11 @@ ratio, cross-entropy / soft Dice, per class:
 
 **Still unsure:**
 - Norm Gradient
+
+## 2026-09-13
+**Did:**
+- Reconstructed images for loss and val dice for ce and dice
+- experiments README.md
+
+Important Notes:
+- The dice differences can be described as: On the parotid, the five losses differ by at most 0.026 Dice, and only one of ten pairwise comparisons survives correction for multiple testing. On the cochlea, one loss achieves 0.63 and the other four achieve exactly zero. The choice of loss is irrelevant for the easy structure and decisive for the hard one

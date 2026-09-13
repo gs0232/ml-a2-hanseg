@@ -25,3 +25,13 @@ What kind of CNN/System am I implementing?
 
 ## 2026-09-12
 - Am I doing Batch or Group normalisation?
+
+## 2026-09-13
+- What is a norm gradient?
+    - Optimizer moves along it
+    - Gives direction of loss if output is push up slightly
+    - norm: length of vector
+    - good if has steepness (like ce) and bad if flat (like compound)
+- How am i supposed to interpret a big difference in hd_max and similar hd95_mm across the losses?
+    - a big difference between hd_max and hd95_mm in one loss means outliers and not a general misspositioning
+    - ranking losses on hd95!
