@@ -124,9 +124,9 @@ def run_one(name, cache_dir, split, device, weights_dir,
     test_df.to_csv(test_csv, index=False)   # written last: its existence
                                            # is what marks the run finished
 
-    plot_loss(hist_csv, f"{fig_dir}/fig_{name}_loss.png",
+    plot_loss(hist_csv, f"{fig_dir}/fig_loss_{name}.png",
               run_label=label, loss_name=loss_name)
-    plot_val_dice(hist_csv, f"{fig_dir}/fig_{name}_val_dice.png",
+    plot_val_dice(hist_csv, f"{fig_dir}/fig_val_dice_{name}.png",
                   run_label=label)
 
     print(test_df.groupby("structure").dice.mean().round(3).to_string())

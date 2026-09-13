@@ -212,3 +212,111 @@ def plot_run_comparison(test_csv, out_path=None, order=None,
     _titles(ax, title, "3-D Dice on the full volumes, left and right pooled")
     ax.legend(loc="upper right")
     return _save(fig, out_path)
+
+
+# ===========================================================================
+def plot_all_runs_grid(histories, out_path=None,
+                       title="Validation Dice per structure, every run"):
+    """Small multiples: one panel per run, four structure curves in each.
+
+    This replaces overlaying every run's *mean* Dice on one axis. The mean
+    hides the only thing that matters here — the mean cannot tell you whether
+    a run scored 0.4 by finding two structures well and two not at all, or by
+    finding all four moderately. One panel per run, structures inside the
+    panel, and the difference is visible without reading a single number.
+    """
+    names = list(histories)
+    ncol = 3
+    nrow = (len(names) + ncol - 1) // ncol
+    _style()
+    fig, axes = plt.subplots(nrow, ncol, figsize=(12.4, 3.5 * nrow),
+                             sharex=True, sharey=True)
+    axes = axes.ravel()
+
+    for ax, name in zip(axes, names):
+        df = pd.read_csv(histories[name])
+        for struct, colour, style in STRUCTURES:
+            ax.plot(df.epoch, df[f"val_dice_{struct}"], color=colour, lw=2,
+                    ls=style, solid_capstyle="round",
+                    label=struct.replace("_", " "))
+        best = df.val_mean_dice.max()
+        ax.set_title(f"{name}   (best mean {best:.3f})", loc="left",
+                     pad=8, fontsize=14)
+        ax.set_ylim(-0.04, 1.04)
+        # mark a structure that ends at exactly zero: a flat line on the axis
+        # reads as "not plotted" unless you say otherwise
+        # A flat line sitting on the axis reads as "not plotted" unless you
+        # say otherwise. Threshold at 0.01 rather than exactly 0: the dice run
+        # peaks at 0.007 on one cochlea, which is zero in every sense that
+        # matters and would otherwise be reported as alive.
+        dead = [s for s, _, _ in STRUCTURES
+                if float(df[f"val_dice_{s}"].max()) < 0.01]
+        if dead:
+            ax.annotate(f"{len(dead)} of 4 never exceed 0.01",
+                        xy=(0.5, 0.04), xycoords="axes fraction",
+                        ha="center", fontsize=12, color=INK_2)
+
+    for ax in axes[len(names):]:
+        ax.set_visible(False)
+    fig.supxlabel("Epoch", fontsize=15, y=0.055)
+    fig.supylabel("Dice coefficient (0–1)", fontsize=15)
+
+    handles, labels = axes[0].get_legend_handles_labels()
+    fig.legend(handles, labels, loc="lower center", ncol=4, frameon=True,
+               bbox_to_anchor=(0.5, -0.04))
+    fig.suptitle(title, x=0.008, y=1.0, ha="left", fontsize=16)
+    fig.tight_layout(rect=[0.02, 0.07, 1, 0.96])
+    if out_path:
+        fig.savefig(out_path, dpi=200, bbox_inches="tight", facecolor="white")
+        print("wrote", out_path)
+    return fig
+
+
+# ===========================================================================
+METRICS = [("dice",      "Dice",                 "higher is better", False),
+           ("sdice_1mm", "Surface Dice @ 1 mm",  "higher is better", False),
+           ("hd95_mm",   "HD95  (mm)",           "lower is better",  True),
+           ("hdmax_mm",  "HD max  (mm)",         "lower is better",  True)]
+
+
+def plot_metric_disagreement(summary_csv, run="ce", out_path=None):
+    """Four metrics, one run, four structures — the ranking reversal.
+
+    The whole Criterion C argument in one figure: by Dice the cochlea looks
+    far worse than the parotid, and by every distance metric it is far better.
+    Four panels because four different units; never one axis.
+    """
+    df = pd.read_csv(summary_csv)
+    df = df[df.run == run].set_index("structure")
+    order = ["Cochlea_L", "Cochlea_R", "Parotid_L", "Parotid_R"]
+    colours = [COCHLEA, COCHLEA, PAROTID, PAROTID]
+    _style()
+    fig, axes = plt.subplots(1, 4, figsize=(13.4, 4.4))
+
+    for ax, (col, label, direction, is_mm) in zip(axes, METRICS):
+        vals = [df.loc[s, col] for s in order]
+        ax.bar(range(4), vals, width=0.62, color=colours)
+        top = max(v for v in vals if pd.notna(v))
+        for i, v in enumerate(vals):
+            ax.annotate(f"{v:.3g}" if is_mm else f"{v:.3f}",
+                        xy=(i, v), xytext=(0, 6), textcoords="offset points",
+                        ha="center", fontsize=12, color=INK_2)
+        ax.set_ylim(0, top * 1.28)
+        ax.set_xticks(range(4))
+        ax.set_xticklabels(["Coch\nL", "Coch\nR", "Par\nL", "Par\nR"],
+                           fontsize=12.5, color=INK)
+        ax.set_title(label, loc="left", pad=26, fontsize=14.5)
+        ax.text(0.0, 1.02, direction, transform=ax.transAxes,
+                fontsize=12, color=INK_2)
+        ax.grid(axis="x", visible=False)
+
+    fig.suptitle(f"The same predictions, four metrics — run: {run}",
+                 x=0.006, y=1.10, ha="left", fontsize=16)
+    fig.text(0.006, 1.02,
+             "Dice ranks the cochlea worst; every distance metric ranks it best.",
+             fontsize=12.5, color=INK_2)
+    fig.tight_layout(rect=[0, 0, 1, 0.99])
+    if out_path:
+        fig.savefig(out_path, dpi=200, bbox_inches="tight", facecolor="white")
+        print("wrote", out_path)
+    return fig
