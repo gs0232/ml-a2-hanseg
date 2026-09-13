@@ -68,6 +68,10 @@ My interest is surgical planning, so I rewrote the motivation.
 
 **Got:**
 - Plot for fig_dice_all_grid
+- Code for weight security
+- New README.md
 
 **Verified by:**
 - Looks like one figure with all the fig_dice_*** 
+- Was not verified, but trusted
+- Reading it

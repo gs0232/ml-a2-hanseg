@@ -152,7 +152,12 @@ so the notebook still works for someone who has only this repository.
 
 **The ground truth is not internally consistent.** Cochlea contour volume
 roughly doubles between patients 01–20 (median 101 voxels) and 21–42 (median
-196). Parotid volume changes by 1.09× and not significantly (p = 0.062). A changepoint search over 31 candidate positions picks case 21. This puts a ceiling on achievable cochlea Dice that has nothing to do with the model. `experiments/test_by_batch.csv` splits the results by batch. An untested alternative explanation is that later scans were acquired at finer resolution.
+196), Mann-Whitney p = 2.3 × 10⁻⁸. Parotid volume changes by 1.09× and not
+significantly (p = 0.062). A changepoint search over 31 candidate positions
+picks case 21. This puts a ceiling on achievable cochlea Dice that has nothing
+to do with the model. `experiments/test_by_batch.csv` splits the results by
+batch. An untested alternative explanation is that later scans were acquired at
+finer resolution.
 
 **One seed per configuration.** Differences smaller than seed-to-seed variation
 cannot be distinguished, and that variation was not measured. Small differences

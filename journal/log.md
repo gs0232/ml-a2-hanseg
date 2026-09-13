@@ -287,6 +287,27 @@ ratio, cross-entropy / soft Dice, per class:
 **Did:**
 - Reconstructed images for loss and val dice for ce and dice
 - experiments README.md
+- Add weight safety in cell 22
+- Run calculation of norm gradient in cell 29
+- Run cell 31: image of an actual CT image with segmentation
+- Add pandas to requirements.tx
+- Check if all files exist
+- Rerun with fresh runtime so others can reproduce figures
+- New README.md
 
 Important Notes:
 - The dice differences can be described as: On the parotid, the five losses differ by at most 0.026 Dice, and only one of ten pairwise comparisons survives correction for multiple testing. On the cochlea, one loss achieves 0.63 and the other four achieve exactly zero. The choice of loss is irrelevant for the easy structure and decisive for the hard one
+- norm gradient of ce in compound total:
+gradient norm sent back into the logits, averaged over 5 batches
+(at the compound run's best weights — the state where cochlea = 0)
+
+term             background    Cochlea_L    Cochlea_R    Parotid_L    Parotid_R
+cross-entropy       0.00005      0.00000      0.00000      0.00003      0.00004
+soft Dice           0.00028      0.00000      0.00000      0.00021      0.00019
+
+ratio, cross-entropy / soft Dice, per class:
+  background       0.17x
+  Cochlea_L        1.97x
+  Cochlea_R        5.78x
+  Parotid_L        0.15x
+  Parotid_R        0.19x

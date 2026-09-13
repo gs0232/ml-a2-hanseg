@@ -2,3 +2,6 @@ SimpleITK
 numpy
 scipy
 matplotlib
+pandas
+
+# torch is in Colab (pip installing torch could use the wrong CUDA version)
