@@ -1,4 +1,4 @@
-# Segmenting small organs-at-risk in head-and-neck CT
+# Segmenting Cochleae in head-and-neck CT
 
 Cochleae and parotid glands in planning CT, using a 2-D U-Net written from
 scratch in PyTorch. Assignment 2, Machine Learning and Advanced Data Analytics,
@@ -9,7 +9,7 @@ gland is roughly 26,000 voxels; a cochlea is about 67 — four voxels across at
 1 mm. Same scan, same model, same training, two completely different outcomes,
 and the interesting question is which design choices decide that.
 
-**Colab notebook (self-contained):** `<paste the public Colab link here>`
+**Colab notebook (self-contained):** `https://colab.research.google.com/github/gs0232/ml-a2-hanseg/blob/main/notebooks/a2_main.ipynb`
 
 ---
 
@@ -59,14 +59,14 @@ boundary distance is the number that matters, and Dice hides it.
 
 ## Reproducing this
 
-### Fast path — every figure, no GPU, about three minutes
+### Fast path (3 min) — every figure, no GPU
 
 All results are committed as CSVs, so the figures can be rebuilt without a GPU,
 without the 4.9 GB dataset and without the trained weights.
 
 Open the Colab notebook and run cells **1, 2, 3, 16, 22, 30**.
 
-### Full path — from nothing, about four and a half hours
+### Full path (4.5 h)
 
 Run the notebook top to bottom: download (4.9 GB), preprocess 42 patients
 (~40 min), five training runs (~3.5 h on a T4). Nothing needs to be set up by
@@ -117,7 +117,7 @@ independent of image size.
 
 **Training** — 30 epochs, AdamW at 1e-3 with cosine annealing, batch size 8,
 mixed precision. The weights kept are those from the epoch with the highest mean
-validation Dice — chosen on validation, never on test.
+validation Dice, chosen on validation, never on test.
 
 **Evaluation** — Dice, HD95, HD max and surface Dice at 1 mm and 2 mm, computed
 per structure per patient on the full 3-D volume, then averaged. Never pooled
@@ -168,5 +168,5 @@ annotated by radiation oncologists for dose planning. Using it to argue about
 operative planning is a proxy and is stated as one.
 
 **2-D, not 2.5-D or 3-D.** The model sees one axial slice at a time and cannot
-use the slices above and below, which is most costly for the cochlea — it spans
+use the slices above and below, which is most costly for the cochlea, it spans
 only a handful of slices.
