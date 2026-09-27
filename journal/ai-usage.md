@@ -75,3 +75,10 @@ My interest is surgical planning, so I rewrote the motivation.
 - Looks like one figure with all the fig_dice_*** 
 - Was not verified, but trusted
 - Reading it
+
+## 2026-09-27
+**Helped with:** I gave Claude my brief draft for the report with sections and information based on the log.md
+
+**Got:** Word document as an expanded draft of my notes
+
+**Verified by:** Read it an ran a test to verify the oversampling fractions again
