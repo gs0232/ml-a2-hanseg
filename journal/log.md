@@ -311,3 +311,11 @@ ratio, cross-entropy / soft Dice, per class:
   Cochlea_R        5.78x
   Parotid_L        0.15x
   Parotid_R        0.19x
+
+## 2026-09-22
+No model work
+First draft of report based on log.md
+
+## 2026-09-27
+No model work
+advanced report draft
