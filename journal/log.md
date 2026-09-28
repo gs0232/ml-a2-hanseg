@@ -319,3 +319,9 @@ First draft of report based on log.md
 ## 2026-09-27
 No model work
 advanced report draft
+
+## 2026-09-28
+No model work
+Finalizing report (adding figures and rereading)
+Turning log files into pdf
+For tomorrow: Reread everything and submit
