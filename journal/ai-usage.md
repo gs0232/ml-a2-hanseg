@@ -82,3 +82,6 @@ My interest is surgical planning, so I rewrote the motivation.
 **Got:** Word document as an expanded draft of my notes
 
 **Verified by:** Read it an ran a test to verify the oversampling fractions again
+
+## 2026-09-28
+**Helped with:** Last check of report and if coherent with repo + create pdf files of log.md, ai-usage.md, and knowledge-gaps.md
